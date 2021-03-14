@@ -3,7 +3,7 @@ package org.csc.java.spring2021;
 
 public class MemoryClass implements Memory {
 
-  public byte[] memory;
+  private byte[] memory;
   private int position = 0;
   private final int memorySize;
 

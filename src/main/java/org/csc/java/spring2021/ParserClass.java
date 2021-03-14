@@ -19,11 +19,13 @@ import java.util.List;
 
 public class ParserClass implements Parser {
 
-  private final Token[] tokens;
-  private final int numOfTokens;
-  private final int[] pairBracket;
+  private Token[] tokens;
+  private int numOfTokens;
+  private int[] pairBracket;
 
-  public ParserClass(Token[] tokens) {
+  public ParserClass() {}
+
+  private void initialize(Token[] tokens){
     this.tokens = tokens;
     this.numOfTokens = tokens.length;
     this.pairBracket = new int[this.numOfTokens];
@@ -41,18 +43,20 @@ public class ParserClass implements Parser {
   }
 
   @Override
-  public List<Command> parse() {
+  public Command parse(Token[] tokens) {
+    initialize(tokens);
     return parse(0, numOfTokens);
   }
 
-  public List<Command> parse(int left, int right) {
+  private Command parse(int left, int right) {
     List<Command> commandList = new ArrayList<Command>();
     int tokenIndex = left;
     while (tokenIndex < right) {
       if (this.tokens[tokenIndex] == LEFT_BRACKET) {
         int rightBracket = this.pairBracket[tokenIndex];
         commandList
-            .add(new CommandClass(CommandType.LOOPCOMMAND, parse(tokenIndex + 1, rightBracket)));
+            .add(new CommandClass(CommandType.LOOPCOMMAND,
+                parse(tokenIndex + 1, rightBracket)));
         tokenIndex = rightBracket + 1;
       } else {
         commandList.add(
@@ -63,12 +67,12 @@ public class ParserClass implements Parser {
               case DECREASE -> new CommandClass(CommandType.DECREASE);
               case INPUT -> new CommandClass(CommandType.INPUT);
               case OUTPUT -> new CommandClass(CommandType.OUTPUT);
-              default -> throw new InternalException();
+              default -> throw new RuntimeException();
             });
         tokenIndex++;
       }
     }
-    return commandList;
+    return new ListCommandClass(commandList);
   }
 
 

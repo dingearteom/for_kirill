@@ -16,6 +16,7 @@ public class Interpreter {
     Linter linter = createLinter();
     Lexer lexer = createLexer();
     Memory memory = createMemory(100);
+    Parser parser = createParser();
 
     Token[] tokens = lexer.tokenize(programText);
 
@@ -29,11 +30,8 @@ public class Interpreter {
       throw new IllegalArgumentException(message.toString());
     }
 
-    Parser parser = new ParserClass(tokens);
-    List<Command> commandList = parser.parse();
-    for (Command command : commandList) {
-      command.execute(ioContext, memory);
-    }
+    Command command = parser.parse(tokens);
+    command.execute(ioContext, memory);
   }
 
   public static Lexer createLexer() {
@@ -41,9 +39,7 @@ public class Interpreter {
   }
 
   public static Parser createParser() {
-    return new ParserClass(
-        new Token[0]); // I really don't initialize parser without parameters, so this function
-    // serves only for the reason of passing all tests.
+    return new ParserClass();
   }
 
   public static Memory createMemory(int memorySize) {

@@ -8,5 +8,5 @@ public interface Parser {
    * Преобразует токены в исполняемую программу. Можно полагаться на то, что токены уже проверены на
    * корректность с помощью Linter
    */
-  List<Command> parse();
+  Command parse(Token[] tokens);
 }

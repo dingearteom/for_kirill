@@ -3,8 +3,8 @@ package org.csc.java.spring2021;
 
 public class LintProblemClass implements LintProblem {
 
-  public int position;
-  public String message;
+  private int position;
+  private String message;
 
   public LintProblemClass(int position, String message) {
     this.position = position;

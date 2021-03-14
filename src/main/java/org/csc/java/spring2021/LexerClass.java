@@ -17,9 +17,6 @@ public class LexerClass implements Lexer {
   private LexerClass() {
   }
 
-  ;
-
-
   public Token[] tokenize(String programText) {
     Token[] tokens = new Token[programText.length()];
     for (int i = 0; i < programText.length(); i++) {

@@ -7,52 +7,80 @@ import java.util.List;
 
 public class CommandClass implements Command {
 
-  public CommandType commandType;
-  public List<Command> state;
+  public final CommandType commandType;
+  public final Command state;
 
   public CommandClass(CommandType commandType) {
     this.commandType = commandType;
-    this.state = new ArrayList<>();
+    this.state = EmptyCommandClass.INSTANCE;
   }
 
-  public CommandClass(CommandType commandType, List<Command> state) {
+  public CommandClass(CommandType commandType, Command state) {
     this.commandType = commandType;
     this.state = state;
   }
+
+  private void executeNext(IOContext context, Memory memory){
+    memory.shiftRight();
+  }
+
+  private void executePrevious(IOContext context, Memory memory){
+    memory.shiftLeft();
+  }
+
+  private void executeIncrease(IOContext context, Memory memory){
+    byte tmp = memory.getByte();
+    tmp++;
+    memory.setByte(tmp);
+  }
+
+  private void executeDecrease(IOContext context, Memory memory){
+    byte tmp = memory.getByte();
+    tmp--;
+    memory.setByte(tmp);
+  }
+
+  private void executeInput(IOContext context, Memory memory){
+    byte value = context.readByte();
+    memory.setByte(value);
+  }
+
+  private void executeOutput(IOContext context, Memory memory){
+    context.writeByte(memory.getByte());
+  }
+
+  private void executeLoopCommand(IOContext context, Memory memory){
+    while (memory.getByte() != 0) {
+      this.state.execute(context, memory);
+    }
+  }
+
 
 
   public void execute(IOContext context, Memory memory) {
     switch (this.commandType) {
       case NEXT -> {
-        memory.shiftRight();
+        this.executeNext(context, memory);
       }
       case PREVIOUS -> {
-        memory.shiftLeft();
+        this.executePrevious(context, memory);
       }
       case INCREASE -> {
-        byte tmp = memory.getByte();
-        tmp++;
-        memory.setByte(tmp);
+        this.executeIncrease(context, memory);
       }
       case DECREASE -> {
-        byte tmp = memory.getByte();
-        tmp--;
-        memory.setByte(tmp);
+        this.executeDecrease(context, memory);
       }
       case INPUT -> {
-        byte value = context.readByte();
-        memory.setByte(value);
+        this.executeInput(context, memory);
       }
       case OUTPUT -> {
-        context.writeByte(memory.getByte());
+        this.executeOutput(context, memory);
       }
       case LOOPCOMMAND -> {
-        while (memory.getByte() != 0) {
-          for (Command command : this.state) {
-            command.execute(context, memory);
-          }
-        }
+        this.executeLoopCommand(context, memory);
       }
     }
   }
 }
+

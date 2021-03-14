@@ -22,15 +22,15 @@ public class LinterClass implements Linter {
   private LinterClass() {
   }
 
-  ;
-
   public List<LintProblem> lint(Token[] tokens, String programText) {
     List<LintProblem> lintProblems = new ArrayList<LintProblem>();
     for (int i = 0; i < tokens.length; i++) {
       if (tokens[i] == UNRECOGNIZED_TOKEN) {
-        lintProblems.add(new LintProblemClass(i + 1, "Unrecognized token was encountered."));
+        lintProblems.add(new LintProblemClass(i + 1,
+            "Unrecognized token was encountered."));
       }
     }
+    String errorMessageWrongBracketsOrder = "Square brackets must form right bracket's sequence.";
     int balance = 0;
     boolean errorRaised = false;
     for (int i = 0; i < tokens.length; i++) {
@@ -40,15 +40,13 @@ public class LinterClass implements Linter {
             balance--;
         }
       if (balance < 0) {
-        lintProblems.add(new LintProblemClass(i + 1, "Square brackets must" +
-            " form right bracket's sequence."));
+        lintProblems.add(new LintProblemClass(i + 1, errorMessageWrongBracketsOrder));
         errorRaised = true;
         break;
       }
     }
     if (!errorRaised && balance != 0) {
-      lintProblems.add(new LintProblemClass(tokens.length, "Square brackets must" +
-          " form right bracket's sequence."));
+      lintProblems.add(new LintProblemClass(tokens.length, errorMessageWrongBracketsOrder));
     }
     return lintProblems;
   }
