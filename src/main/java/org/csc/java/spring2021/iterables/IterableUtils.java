@@ -1,5 +1,7 @@
 package org.csc.java.spring2021.iterables;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import org.csc.java.spring2021.NotImplementedException;
 
 public final class IterableUtils {
@@ -28,8 +30,32 @@ public final class IterableUtils {
    * @param to   конечный индекс (невключительно)
    * @return итерируемый объект
    */
-  public static Iterable<Integer> range(int from, int to) {
-    throw new NotImplementedException();
+  public static Iterable<Integer> range(int from, int to)
+  {
+    assert from <= to: String.format("Illegal range specified. from must not be greater than to,"
+        + "though from provided: %d, to provided: %d", from, to);
+    return new Iterable<Integer>() {
+      @Override
+      public Iterator<Integer> iterator() {
+        return new Iterator<Integer>() {
+          int current = from - 1;
+
+          @Override
+          public boolean hasNext() {
+            return current < to - 1;
+          }
+
+          @Override
+          public Integer next() {
+            if (current == to - 1) {
+              throw new NoSuchElementException();
+            }
+            current++;
+            return current;
+          }
+        };
+      }
+    };
   }
 
   /**
@@ -52,7 +78,31 @@ public final class IterableUtils {
    * @return итерируемый объект
    */
   public static Iterable<Integer> range(int from, int to, int step) {
-    throw new NotImplementedException();
+    assert from <= to: String.format("Illegal range specified. from must not be greater than to,"
+        + "though from provided: %d, to provided: %d", from, to);
+    assert step >= 1: String.format("Illegal step specified. Step must be greater or equal to 1, "
+        + "though step provided: %d", step);
+    return new Iterable<Integer>() {
+      @Override
+      public Iterator<Integer> iterator() {
+        return new Iterator<Integer>() {
+          int current = from - step;
+          @Override
+          public boolean hasNext() {
+            return current < to - step;
+          }
+
+          @Override
+          public Integer next() {
+            if (current >= to - step){
+              throw new NoSuchElementException();
+            }
+            current += step;
+            return current;
+          }
+        };
+      }
+    };
   }
 
   /**
@@ -74,7 +124,27 @@ public final class IterableUtils {
    * @return итерируемый объект
    */
   public static Iterable<Character> iterate(String string) {
-    throw new NotImplementedException();
+    return new Iterable<Character>() {
+      @Override
+      public Iterator<Character> iterator() {
+        return new Iterator<Character>() {
+          int currentIndex = -1;
+          @Override
+          public boolean hasNext() {
+            return currentIndex < string.length() - 1;
+          }
+
+          @Override
+          public Character next() {
+            if (currentIndex >= string.length() - 1){
+              throw new NoSuchElementException();
+            }
+            currentIndex++;
+            return string.charAt(currentIndex);
+          }
+        };
+      }
+    };
   }
 
   /**
@@ -102,6 +172,23 @@ public final class IterableUtils {
   public static <A, B> Iterable<Pair<A, B>> zip(
       Iterable<? extends A> first,
       Iterable<? extends B> second) {
-    throw new NotImplementedException();
+      return new Iterable<Pair<A, B>>() {
+        private final Iterator<? extends A> firstIterator = first.iterator();
+        private final Iterator<? extends B> secondIterator = second.iterator();
+        @Override
+        public Iterator<Pair<A, B>> iterator() {
+          return new Iterator<Pair<A, B>>() {
+            @Override
+            public boolean hasNext() {
+              return firstIterator.hasNext() && secondIterator.hasNext();
+            }
+
+            @Override
+            public Pair<A, B> next() {
+                return new Pair<A, B>(firstIterator.next(), secondIterator.next());
+            }
+          };
+        }
+      };
   }
 }

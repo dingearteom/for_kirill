@@ -2,8 +2,12 @@ package org.csc.java.spring2021.smartlist;
 
 import java.util.AbstractList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.RandomAccess;
 import org.csc.java.spring2021.NotImplementedException;
+import java.util.Arrays;
+
 
 /**
  * Оптимизированный по памяти и виртуальным вызовам список. {@link AbstractList} является базовым
@@ -27,8 +31,25 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
   /**
    * Конструктор. Создаёт пустой список
    */
+
+  private static final int DEFAULT_CAPACITY = 10;
+  private static final Object[] EMPTY_ELEMENTDATA = {};
+  private Object singleValue = null;
+  private Object[] elementData;
+  private int size = 0;
+
+  @SuppressWarnings("unchecked")
+  private V singleValue(){
+    return (V) singleValue;
+  }
+
+  @SuppressWarnings("unchecked")
+  private V elementData(int index){
+    return (V) elementData[index];
+  }
+
   public SmartList() {
-    throw new NotImplementedException();
+      this.elementData = EMPTY_ELEMENTDATA;
   }
 
   /**
@@ -37,7 +58,17 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    * @param collection коллекция
    */
   public SmartList(Collection<? extends V> collection) {
-    throw new NotImplementedException();
+    Object[] a = collection.toArray().clone();
+    this.size = a.length;
+    if (size > 1){
+      this.elementData = a;
+    }
+    else if (size == 1) {
+      this.singleValue = a[0];
+    }
+    else{
+      elementData = EMPTY_ELEMENTDATA;
+    }
   }
 
   /**
@@ -46,7 +77,8 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    * @param element элемент
    */
   public SmartList(V element) {
-    throw new NotImplementedException();
+    size = 1;
+    singleValue = element;
   }
 
   /**
@@ -57,7 +89,17 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    */
   @SafeVarargs
   public SmartList(V... elements) {
-    throw new NotImplementedException();
+    Object[] a = elements.clone();
+    this.size = a.length;
+    if (size > 1){
+      this.elementData = a;
+    }
+    else if (size == 1) {
+      this.singleValue = a[0];
+    }
+    else{
+      elementData = EMPTY_ELEMENTDATA;
+    }
   }
 
   /**
@@ -70,7 +112,13 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    */
   @Override
   public V get(int index) {
-    throw new NotImplementedException();
+    Objects.checkIndex(index, size);
+    if (size == 1){
+      return singleValue();
+    }
+    else{
+      return elementData(index);
+    }
   }
 
   /**
@@ -80,7 +128,20 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    */
   @Override
   public int size() {
-    throw new NotImplementedException();
+    return size;
+  }
+
+  private  Object[] grow(int minCapacity){
+    int oldCapacity = elementData.length;
+    if (oldCapacity >= DEFAULT_CAPACITY) {
+      int newCapacity = oldCapacity + oldCapacity >> 1;
+      return elementData = Arrays.copyOf(elementData, newCapacity);
+    } else {
+      return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+    }
+  }
+  private Object[] grow(){
+    return grow(size + 1);
   }
 
   /**
@@ -93,7 +154,17 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    */
   @Override
   public V set(int index, V element) {
-    throw new NotImplementedException();
+    Objects.checkIndex(index, size);
+    if (size == 1){
+      V oldValue = singleValue();
+      singleValue = element;
+      return oldValue;
+    }
+    else{
+      V oldValue = elementData(index);
+      elementData[index] = element;
+      return oldValue;
+    }
   }
 
   /**
@@ -107,7 +178,23 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    */
   @Override
   public V remove(int index) {
-    throw new NotImplementedException();
+    Objects.checkIndex(index, size);
+    V oldValue;
+    if (size == 1) {
+      oldValue = singleValue();
+      singleValue = null;
+      size--;
+    }
+    else{
+      oldValue = elementData(index);
+      System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+      size--;
+      if (size == 1){
+        singleValue = elementData[0];
+        elementData = EMPTY_ELEMENTDATA;
+      }
+    }
+    return oldValue;
   }
 
   /**
@@ -120,7 +207,19 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    */
   @Override
   public void add(int index, V element) {
-    throw new NotImplementedException();
+    if (index < 0 && index > size){
+      throw new IndexOutOfBoundsException();
+    }
+    if (size == 1){
+      elementData = new Object[]{singleValue};
+      singleValue = null;
+    }
+    if (size == elementData.length){
+      grow();
+    }
+    System.arraycopy(elementData, index, elementData, index + 1, size - index);
+    elementData[index] = element;
+    size++;
   }
 
   /**
@@ -132,6 +231,11 @@ public class SmartList<V> extends AbstractList<V> implements RandomAccess {
    * @return значение поля, с помощью которого хранятся элементы списка.
    */
   protected Object getInternalData() {
-    throw new NotImplementedException();
+    if (size == 1){
+      return singleValue;
+    }
+    else{
+      return elementData;
+    }
   }
 }

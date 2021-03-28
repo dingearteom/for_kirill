@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.sun.jdi.InternalException;
 import org.csc.java.spring2021.NotImplementedException;
 
 /**
@@ -20,6 +21,7 @@ public class HashBidiMap<K, V> extends AbstractMap<K, V> implements BidiMap<K, V
   /**
    * Конструктор. Создаёт незаполненный {@link HashBidiMap}.
    */
+
   public HashBidiMap() {
     throw new NotImplementedException();
   }
@@ -55,7 +57,9 @@ public class HashBidiMap<K, V> extends AbstractMap<K, V> implements BidiMap<K, V
    * @return список ключей или null (в случае, если ключей с таким значением нет)
    */
   @Override
-  public List<K> getKeysByValue(V value) {
+  public List<K> getKeysByValue(V value)
+  {
+
     throw new NotImplementedException();
   }
 
@@ -97,6 +101,9 @@ public class HashBidiMap<K, V> extends AbstractMap<K, V> implements BidiMap<K, V
   }
 
   static class HashBidiMapEntrySet<K, V> extends AbstractSet<Entry<K, V>> {
+    public HashBidiMapEntrySet(){
+      throw new InternalException();
+    }
 
     public HashBidiMapEntrySet(Map<K, V> keyToValue, Map<V, List<K>> valueToKeys) {
       throw new NotImplementedException();
