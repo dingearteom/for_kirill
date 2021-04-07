@@ -1,0 +1,16 @@
+name: Run Checkstyle on Code
+
+on:
+  # Triggers the workflow on push or pull request events
+  pull_request:
+
+jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run java checkstyle
+        uses: nikitasavinov/checkstyle-action@master
+        continue-on-error: true
+        with:
+          reporter: 'github-pr-check' # makes it work for commits and pull-requests
