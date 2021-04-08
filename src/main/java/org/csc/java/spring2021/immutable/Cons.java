@@ -1,7 +1,6 @@
 package org.csc.java.spring2021.immutable;
 
 import java.util.function.BiFunction;
-import org.csc.java.spring2021.NotImplementedException;
 
 /**
  * <p>
@@ -20,37 +19,69 @@ import org.csc.java.spring2021.NotImplementedException;
  */
 final class Cons<T> extends FList<T> {
 
+  private final T head;
+  private final FList<T> tail;
+
   Cons(T head, FList<T> tail) {
-    throw new NotImplementedException();
+    this.head = head;
+    this.tail = tail;
   }
 
   @Override
   public int size() {
-    throw new NotImplementedException();
+    return tail.size() + 1;
   }
 
   @Override
   public T get(int index) {
-    throw new NotImplementedException();
+    if (index < 0 || index >= size()){
+      throw new IndexOutOfBoundsException();
+    }
+
+    if (index == 0){
+      return head;
+    }
+    else{
+      return tail.get(index - 1);
+    }
   }
 
   @Override
   public <R> R foldr(R zero, BiFunction<T, R, R> folder) {
-    throw new NotImplementedException();
+    return folder.apply(head, tail.foldr(zero, folder));
   }
 
   @Override
   public <R> R foldl(R zero, BiFunction<R, T, R> folder) {
-    throw new NotImplementedException();
+    return tail.foldl(folder.apply(zero, head), folder);
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public boolean equals(Object o) {
-    throw new NotImplementedException();
+    if (this == o)
+      return true;
+    if (o == null)
+      return false;
+    if (getClass() != o.getClass())
+      return false;
+    Cons<T> object = (Cons<T>)o;
+    if (size() != object.size())
+      return false;
+    for (int index = 0; index < size(); index++){
+      if (!get(index).equals(object.get(index)))
+        return false;
+    }
+    return true;
   }
 
   @Override
   public int hashCode() {
-    throw new NotImplementedException();
+    int hashCode = 1;
+    for (int index = 0; index < size(); index++){
+      T element = get(index);
+      hashCode = 31 * hashCode + (element == null ? 0 : element.hashCode());
+    }
+    return hashCode;
   }
 }

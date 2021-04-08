@@ -44,15 +44,13 @@ public class FListTest {
 
   @Test
   void testCons() {
-    throw new CommentedTestPlaceholderException();
+    FList<Integer> ints = listOf(1);
+    FList<Number> numbers = cons(2.0, ints);
+    FList<Object> objects = cons("Hello", numbers);
 
-//    FList<Integer> ints = listOf(1);
-//    FList<Number> numbers = cons(2.0, ints);
-//    FList<Object> objects = cons("Hello", numbers);
-//
-//    assertThat(objects.get(0)).isEqualTo("Hello");
-//    assertThat(objects.get(1)).isEqualTo(2.0);
-//    assertThat(objects.get(2)).isEqualTo(1);
+    assertThat(objects.get(0)).isEqualTo("Hello");
+    assertThat(objects.get(1)).isEqualTo(2.0);
+    assertThat(objects.get(2)).isEqualTo(1);
 
   }
 
@@ -117,15 +115,14 @@ public class FListTest {
           .containsExactly(1, 2, 3, 1, 2, 3);
     }
 
-    throw new CommentedTestPlaceholderException();
-//    {
-//      FList<Integer> ints = listOf(1, 2, 3);
-//      FList<Double> doubles = listOf(4.0, 5.0, 6.0);
-//
-//      FList<Number> numbers = concat(ints, doubles);
-//
-//      assertThat(toJavaList(numbers)).containsExactly(1, 2, 3, 4.0, 5.0, 6.0);
-//    }
+    {
+      FList<Integer> ints = listOf(1, 2, 3);
+      FList<Double> doubles = listOf(4.0, 5.0, 6.0);
+
+      FList<Number> numbers = concat(ints, doubles);
+
+      assertThat(toJavaList(numbers)).containsExactly(1, 2, 3, 4.0, 5.0, 6.0);
+    }
   }
 
   @Test
@@ -231,17 +228,16 @@ public class FListTest {
       assertThat(result.toString()).isEqualTo("Hello there!");
     }
 
-    throw new CommentedTestPlaceholderException();
-//    {
-//      StringBuilder result = new StringBuilder();
-//      Consumer<CharSequence> consumer = result::append;
-//
-//      FList<String> list = listOf("Hello", " ", "there", "!");
-//
-//      forEach(list, consumer);
-//
-//      assertThat(result.toString()).isEqualTo("Hello there!");
-//    }
+    {
+      StringBuilder result = new StringBuilder();
+      Consumer<CharSequence> consumer = result::append;
+
+      FList<String> list = listOf("Hello", " ", "there", "!");
+
+      forEach(list, consumer);
+
+      assertThat(result.toString()).isEqualTo("Hello there!");
+    }
   }
 
   @Test
@@ -254,16 +250,15 @@ public class FListTest {
           .isEqualTo(listOf("1", "2", "3"));
     }
 
-    throw new CommentedTestPlaceholderException();
-//    {
-//      FList<Integer> originalList = listOf(1, 2, 3);
-//      Function<Number, String> mapper = Object::toString;
-//
-//      FList<CharSequence> resultList = map(originalList, mapper);
-//
-//      assertThat(resultList)
-//          .isEqualTo(listOf("1", "2", "3"));
-//    }
+    {
+      FList<Integer> originalList = listOf(1, 2, 3);
+      Function<Number, String> mapper = Object::toString;
+
+      FList<CharSequence> resultList = map(originalList, mapper);
+
+      assertThat(resultList)
+          .isEqualTo(listOf("1", "2", "3"));
+    }
   }
 
   @Test
@@ -278,13 +273,12 @@ public class FListTest {
       assertThat(oddNumbers).isEqualTo(listOf(1, 3, 5));
     }
 
-    throw new CommentedTestPlaceholderException();
-//    {
-//      FList<Integer> list = listOf(1, 2, 3, 100);
-//
-//      Predicate<Number> lengthPredicate = number -> number.toString().length() < 3;
-//
-//      assertThat(filter(list, lengthPredicate)).isEqualTo(listOf(1, 2, 3));
-//    }
+    {
+      FList<Integer> list = listOf(1, 2, 3, 100);
+
+      Predicate<Number> lengthPredicate = number -> number.toString().length() < 3;
+
+      assertThat(filter(list, lengthPredicate)).isEqualTo(listOf(1, 2, 3));
+    }
   }
 }

@@ -85,7 +85,15 @@ public abstract class FList<T> {
    */
   @Override
   public final String toString() {
-    throw new NotImplementedException();
+    StringBuilder representation = new StringBuilder();
+    representation.append("FList [");
+    for (int index = 0; index < size(); index++){
+      representation.append(get(index));
+      if (index != size() -1)
+        representation.append(", ");
+    }
+    representation.append("]");
+    return representation.toString();
   }
 
   /**

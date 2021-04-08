@@ -1,7 +1,6 @@
 package org.csc.java.spring2021.immutable;
 
 import java.util.function.BiFunction;
-import org.csc.java.spring2021.NotImplementedException;
 
 /**
  * <p>
@@ -21,32 +20,36 @@ final class Nil<T> extends FList<T> {
 
   @Override
   public int size() {
-    throw new NotImplementedException();
+    return 0;
   }
 
   @Override
-  public T get(int index) {
-    throw new NotImplementedException();
+  public T get(int index)
+  {
+    throw new IndexOutOfBoundsException();
   }
 
   @Override
   public <R> R foldr(R zero, BiFunction<T, R, R> folder) {
-    throw new NotImplementedException();
+    return zero;
   }
 
   @Override
   public <R> R foldl(R zero, BiFunction<R, T, R> folder) {
-    throw new NotImplementedException();
+    return zero;
   }
 
   @Override
   public boolean equals(Object obj) {
-    throw new NotImplementedException();
+    if (obj == null){
+      return false;
+    }
+    return (getClass() == obj.getClass());
   }
 
   @Override
   public int hashCode() {
-    throw new NotImplementedException();
+    return 0;
   }
 
 }
