@@ -13,7 +13,7 @@ import java.util.function.Function;
 public class ImpComposableFuture<T> implements ComposableFuture<T> {
     private final Result<T> result;
     private final ThreadPool pool;
-    private final List<Function<T, Runnable>> waitList = new ArrayList<>();
+    public volatile Status status = Status.NOT_FINISHED;
 
     ImpComposableFuture(Result<T> result, ThreadPool pool){
         this.result = result;
@@ -56,19 +56,22 @@ public class ImpComposableFuture<T> implements ComposableFuture<T> {
     }
 
     public <U> ComposableFuture<U> thenApply(Function<? super T, ? extends U> mapper){
-        if (this.isReady()){
+        while(!this.isReady()){
+            Thread.onSpinWait();
+        }
+        //if (this.isReady()){
             if (this.getStatus() == Status.FINISHED_WITH_EXCEPTION){
                 return new ImpComposableFuture<U>(new Result<U>(this.result.exc), pool);
             }
             return pool.invoke(() -> {return mapper.apply(this.result.result);});
-        }
-        else{
-            Result<U> result = new Result<>();
-            waitList.add((T t) -> {
-                return new TaskRunnable<U>(result, () -> {return mapper.apply(t);});
-            });
-            return new ImpComposableFuture<>(result, pool);
-        }
+        //}
+//        else{
+//            Result<U> result = new Result<>();
+//            waitList.add((T t) -> {
+//                return new TaskRunnable<U>(result, () -> {return mapper.apply(t);});
+//            });
+//            return new ImpComposableFuture<>(result, pool);
+//        }
 
     }
 
