@@ -9,6 +9,13 @@ public class Result<T> {
     public volatile STATUS status = STATUS.NOT_FINISHED;
     public volatile ExecutionException exc = null;
 
+    public Result(){}
+
+    public Result(ExecutionException exc){
+        this.status = STATUS.FINISHED_WITH_EXCEPTION;
+        this.exc = exc;
+    }
+
     public enum STATUS{
         FINISHED,
         NOT_FINISHED,

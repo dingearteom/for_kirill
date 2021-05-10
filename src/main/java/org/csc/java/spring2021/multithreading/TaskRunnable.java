@@ -21,8 +21,8 @@ public class TaskRunnable<T> implements Runnable {
             this.result.status = Result.STATUS.FINISHED;
         }
         catch (RuntimeException exc){
-            this.result.status = Result.STATUS.FINISHED_WITH_EXCEPTION;
             this.result.exc = new ExecutionException(exc);
+            this.result.status = Result.STATUS.FINISHED_WITH_EXCEPTION;
         }
     }
 }

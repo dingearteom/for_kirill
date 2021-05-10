@@ -1,7 +1,7 @@
 package org.csc.java.spring2021.multithreading;
 
 import org.csc.java.spring2021.multithreading.shared.Running;
-import org.csc.java.spring2021.multithreading.shared.ThreadsDead;
+import org.csc.java.spring2021.multithreading.shared.ThreadsAlive;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -9,12 +9,12 @@ import java.util.concurrent.TimeUnit;
 public class ThreadProcessor implements Runnable{
     private final Running running;
     private final LinkedBlockingQueue<Runnable> tasks;
-    private final ThreadsDead threadsDead;
+    private final ThreadsAlive threadsAlive;
     private static final long waitTime = 10;
 
-    ThreadProcessor(LinkedBlockingQueue<Runnable> tasks, ThreadsDead threadsDead, Running running){
+    ThreadProcessor(LinkedBlockingQueue<Runnable> tasks, ThreadsAlive threadsAlive, Running running){
         this.tasks = tasks;
-        this.threadsDead = threadsDead;
+        this.threadsAlive = threadsAlive;
         this.running = running;
     }
 
@@ -31,7 +31,7 @@ public class ThreadProcessor implements Runnable{
                 current_task = null;
             }
         }
-        threadsDead.cntDead.getAndIncrement();
+        threadsAlive.cntAlive.getAndDecrement();
         // System.out.printf("I'm done %d%n", Thread.currentThread().getId());
     }
 
